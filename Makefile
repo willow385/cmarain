@@ -35,7 +35,7 @@ TARGET = test.x86
 # required sourcefiles
 SOURCE = src/mchar_t.c\
 	 src/mchar_t.h\
-	 src/test.c
+	 src/main.c
 
 
 # expected object files for main.c
