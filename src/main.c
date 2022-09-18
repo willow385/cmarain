@@ -14,7 +14,13 @@ struct sdl_context {
 
 void render_pixel_sdl(int x, int y, void *context) {
   struct sdl_context *sdlc = context;
-  SDL_RenderDrawPoint(sdlc->renderer, x, y);
+  SDL_Rect pixel = {
+    .x = x * 4,
+    .y = y * 4,
+    .w = 4,
+    .h = 4
+  };
+  SDL_RenderFillRect(sdlc->renderer, &pixel);
 }
 
 int main(int argc, char *argv[]) {
@@ -29,8 +35,8 @@ int main(int argc, char *argv[]) {
     "Marain Text Viewer",
     SDL_WINDOWPOS_CENTERED,
     SDL_WINDOWPOS_CENTERED,
-    128,
-    128,
+    512,
+    512,
     0
   );
   sdlc.renderer = SDL_CreateRenderer(sdlc.window, 0, 0);
@@ -50,7 +56,7 @@ int main(int argc, char *argv[]) {
   mc_render_str(
     (struct mstr_t){ .length = 12, .chars = hello_world },
     s_3x3,
-    10, 10,
+    1, 1,
     &render_pixel_sdl, (void *)&sdlc
   );
 
