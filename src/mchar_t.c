@@ -1,5 +1,6 @@
 #include "mchar_t.h"
 #include <stdbool.h>
+#include <string.h>
 
 static void mc_render_5x5_char(
   mchar_t marain_char,
@@ -54,16 +55,22 @@ void mc_render_str(
     font_size == s_3x3 ? 4 :
     font_size == s_5x5 ? 6 :
     font_size == s_7x7 ? 8 : 0;
-  unsigned int px_offset_amount = 0;
+  unsigned int x_offset_amount = 0;
+  unsigned int line = 0;
   for (int i = 0; i < string.length; i++) {
-    mc_render_char(
-      string.chars[i],
-      font_size,
-      x + px_offset_amount, y,
-      render_px,
-      context
-    );
-    px_offset_amount += px_offset;
+    if (string.chars[i] == mc_newline) {
+      line++;
+      x_offset_amount = 0;
+    } else {
+      mc_render_char(
+        string.chars[i],
+        font_size,
+        x + x_offset_amount, y + line * px_offset,
+        render_px,
+        context
+      );
+      x_offset_amount += px_offset;
+    }
   }
 }
 
@@ -116,11 +123,84 @@ char mc_mchar_to_ascii(mchar_t c) {
     case mc_gol:    return '6';
     case mc_lyeway: return '7';
 
+    case mc_newline: return '\n';
     default:        return '?'; // TODO better error handling
   }
 }
 
 mchar_t mc_ascii_to_mchar(char c) {
-  // TODO
-  return mc_error;
+    switch (c) {
+    case 'w': return mc_wa;
+    case 'u': return mc_uh;
+    case 'm': return mc_ma;
+    case 'h': return mc_hek;
+    case 'd': return mc_de;
+    case 'a': return mc_a;
+    case 'p': return mc_pika;
+    case 's': return mc_seth;
+    case 't': return mc_tawa;
+    case 'i': return mc_ihk;
+    case 'l': return mc_le;
+    case 'C': return mc_tchey;
+    case 'k': return mc_keluh;
+    case 'o': return mc_ot;
+    case 'b': return mc_bat;
+    case 'H': return mc_chem;
+    case 'f': return mc_ihf;
+    case 'A': return mc_ayyuhm;
+    case 'v': return mc_vash;
+    case 'L': return mc_llewu;
+    case 'n': return mc_nek;
+    case 'E': return mc_iye;
+    case 'g': return mc_gu;
+    case 'G': return mc_eng;
+    case 'z': return mc_zau;
+    case 'e': return mc_ep;
+    case 'j': return mc_ye;
+    case 'S': return mc_shihk;
+    case 'y': return mc_yoter;
+    case 'O': return mc_uf;
+    case 'r': return mc_rek;
+    case 'T': return mc_tham;
+
+    case ' ': return mc_space;
+    case '(': case ',': return mc_openb;
+    case ')': case '"': return mc_closeb;
+    case '.': return mc_stop;
+  
+    case '0': return mc_nhech;
+    case '1': return mc_sto;
+    case '2': return mc_hre;
+    case '3': return mc_dosa;
+    case '4': return mc_llamih;
+    case '5': return mc_ko;
+    case '6': return mc_gol;
+    case '7': return mc_lyeway;
+
+    case '\n': return mc_newline;
+    default:   return mc_error; // TODO better error handling
+  }
+}
+
+void mc_mstr_to_ascii(char *buf, struct mstr_t mstr) {
+  size_t i;
+  for (i = 0; i < mstr.length; i++) {
+    buf[i] = mc_mchar_to_ascii(mstr.chars[i]);
+  }
+  buf[i] = '\0';
+}
+
+void mc_ascii_to_mstr(struct mstr_t *mstr, const char *cstr) {
+  mstr->length = strlen(cstr);
+  mstr->chars = malloc(mstr->length * sizeof(mchar_t));
+  for (size_t i = 0, c = 0; i < mstr->length; i++, c++) {
+    if (cstr[c] == '\\' && cstr[c+1] == 'n') {
+      mstr->chars[i] = mc_newline;
+      c++; // lol
+    } else if (cstr[c] != '\0') {
+      mstr->chars[i] = mc_ascii_to_mchar(cstr[c]);
+    } else {
+      return;
+    }
+  }
 }

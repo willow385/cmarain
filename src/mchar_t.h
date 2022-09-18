@@ -55,7 +55,8 @@ enum marain_character_set {
   mc_gol    = 0b100111010,
   mc_lyeway = 0b010110111,
 
-  mc_error  = 0b101010101
+  mc_error  = 0b101010101,
+  mc_newline = '\n'
 };
 
 struct mstr_t {
@@ -85,6 +86,11 @@ void mc_render_str(
 
 char mc_mchar_to_ascii(mchar_t c);
 mchar_t mc_ascii_to_mchar(char c);
-int print_mstr_as_ascii(struct mstr_t str);
+
+/// Assumes `buf` is already allocated and big enough to hold `1 + mstr.length` characters.
+void mc_mstr_to_ascii(char *buf, struct mstr_t mstr);
+
+/// `mstr->chars` must be freed with `free()` from `stdlib.h` after this is called.
+void mc_ascii_to_mstr(struct mstr_t *mstr, const char *cstr);
 
 #endif // MCHAR_T_H

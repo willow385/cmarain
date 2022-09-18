@@ -3,6 +3,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include "mchar_t.h"
 
@@ -28,6 +29,10 @@ int main(int argc, char *argv[]) {
     mc_hek, mc_yoter, mc_le, mc_llewu, mc_ayyuhm, mc_space,
     mc_rek, mc_ayyuhm, mc_bat, mc_ihk, mc_nek, mc_stop
   };
+  struct mstr_t string_to_render = { .length = 12, .chars = hello_world };
+  if (argc == 2) {
+    mc_ascii_to_mstr(&string_to_render, argv[1]);
+  }
 
   SDL_Init(SDL_INIT_VIDEO);
   struct sdl_context sdlc;
@@ -54,7 +59,7 @@ int main(int argc, char *argv[]) {
   // render the string
   SDL_SetRenderDrawColor(sdlc.renderer, 255, 255, 255, 255);
   mc_render_str(
-    (struct mstr_t){ .length = 12, .chars = hello_world },
+    string_to_render,
     s_3x3,
     1, 1,
     &render_pixel_sdl, (void *)&sdlc
@@ -67,6 +72,7 @@ int main(int argc, char *argv[]) {
     if (event.type == SDL_QUIT) window_open = 0;
   } while (window_open);
 
+  if (argc == 2) free(string_to_render.chars);
   SDL_DestroyRenderer(sdlc.renderer);
   SDL_DestroyWindow(sdlc.window);
   SDL_Quit();
