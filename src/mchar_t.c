@@ -57,7 +57,7 @@ void mc_render_str(
     font_size == s_7x7 ? 8 : 0;
   unsigned int x_offset_amount = 0;
   unsigned int line = 0;
-  for (int i = 0; i < string.length; i++) {
+  for (unsigned int i = 0; i < string.length; i++) {
     if (string.chars[i] == mc_newline) {
       line++;
       x_offset_amount = 0;
