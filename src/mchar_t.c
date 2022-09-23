@@ -8,7 +8,54 @@ static void mc_render_5x5_char(
   void (*render_px)(int, int, void *),
   void *context
 ) {
-  // TODO
+  // draw the corners
+  for (unsigned int i = 0; i < 9; i++) {
+    if (marain_char & (0b100000000u >> i))
+      render_px(x + (2 * (i % 3)), y + (2 * (i / 3)), context);
+  }
+
+  // then draw what's between them
+  switch (marain_char) {
+    case mc_nek:
+      render_px(x + 2, y + 1, context);
+      render_px(x + 2, y + 3, context);
+    // fallthrough
+    case mc_wa:
+      render_px(x,     y + 1, context);
+      render_px(x,     y + 3, context);
+      render_px(x + 1, y + 2, context),
+      render_px(x + 3, y + 2, context);
+    break;
+    case mc_uh:
+      render_px(x + 1, y + 1, context);
+      render_px(x + 3, y + 3, context);
+      render_px(x + 4, y + 3, context);
+    break;
+    case mc_ma:
+      render_px(x + 4, y + 1, context);
+      render_px(x + 4, y + 3, context);
+      render_px(x + 1, y + 4, context);
+      render_px(x + 3, y + 4, context);
+    break;
+    case mc_hek:
+      render_px(x,     y + 1, context);
+      render_px(x + 4, y + 1, context);
+      render_px(x + 1, y + 3, context);
+      render_px(x + 3, y + 3, context);
+    break;
+    case mc_de:
+      render_px(x + 1, y,     context);
+      render_px(x + 2, y + 1, context);
+      render_px(x + 2, y + 3, context);
+      render_px(x + 3, y + 4, context);
+    break;
+    case mc_a:
+      render_px(x + 1, y,     context);
+      render_px(x + 3, y,     context);
+      render_px(x,     y + 1, context);
+      render_px(x + 1, y + 3, context);
+    break;
+  }
 }
 
 static void mc_render_7x7_char(
@@ -32,7 +79,7 @@ void mc_render_char(
     case s_3x3: {
       for (unsigned int i = 0; i < 9; i++) {
         if (marain_char & (0b100000000u >> i)) render_px(x + (i % 3), y + (i / 3), context);
-      } 
+      }
     } break;
     case s_5x5:
       mc_render_5x5_char(marain_char, x, y, render_px, context);

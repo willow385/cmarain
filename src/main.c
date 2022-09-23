@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
   SDL_SetRenderDrawColor(sdlc.renderer, 255, 255, 255, 255);
   mc_render_str(
     string_to_render,
-    s_3x3,
+    s_5x5,
     1, 1,
     &render_pixel_sdl, (void *)&sdlc
   );

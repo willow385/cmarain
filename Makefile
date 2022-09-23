@@ -29,7 +29,7 @@ SDL2 = -D_REENTRANT -I/usr/include/SDL2 -lSDL2
 
 
 # name of the target
-TARGET = test.x86
+TARGET = render-string-test.x86
 
 
 # required sourcefiles
@@ -46,8 +46,12 @@ $(TARGET): $(SOURCE)
 	$(CC) $(FLAGS) -c src/mchar_t.c -o obj/mchar_t.o
 	$(CC) $(FLAGS) $(OBJS) src/main.c -o $(TARGET) $(SDL2)
 
-run: $(TARGET)
+run-test: $(TARGET)
 	./$(TARGET)
+
+converters: $(OBJS) src/ascii2marain.c src/marain2ascii.c
+	$(CC) $(FLAGS) src/ascii2marain.c $(OBJS) -o ascii2marain
+	$(CC) $(FLAGS) src/marain2ascii.c $(OBJS) -o marain2ascii
 
 prof: $(SOURCE)
 	$(CC) $(PROF) -c src/mchar_t.c -o obj/mchar_t.o
